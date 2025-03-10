@@ -2,23 +2,32 @@ import Link from "next/link";
 import sqlite3 from "sqlite3";
 import {open} from "sqlite";
 import Navtabs from "@/app/navtabs";
+import {movie, PrismaClient, Prisma} from "@prisma/client";
 
-const db = await open({
-    filename: 'data/database.db',
-    driver: sqlite3.Database,
-});
+const prisma = new PrismaClient();
 
-type Movie = {
-    movie_id: number;
-    title: string;
-    description: string;
-    year: number;
-    rating: number;
-    genre: string;
-}
+// const db = await open({
+//     filename: 'data/database.db',
+//     driver: sqlite3.Database,
+// });
+
+// type Movie = void | {
+//     movie_id: number;
+//     title: string | null;
+//     description: string | null;
+//     year: number | null;
+//     rating: number | null;
+//     genre_id: number | null;
+// }[]
+
+type MovieWithGenre = Prisma.movieGetPayload<{
+    include: {
+        genre: true,
+    }
+}>
 
 export default async function MoviesPage() {
-    const movies: Movie[] = await db.all('SELECT movie_id, title, description, year, rating, name AS genre FROM movies m JOIN genres g ON m.genre_id = g.genre_id');
+    const moviesWithGenre = await prisma.movie.findMany({include: {genre: true,}});
 
     return (
         <section>
@@ -36,12 +45,13 @@ export default async function MoviesPage() {
                 </tr>
                 </thead>
                 <tbody>
-                {movies.map((movie: Movie) => (
+
+                {moviesWithGenre.map((movie) => (
                     <tr key={movie.movie_id}>
                         <td>{movie.title}</td>
                         <td>{movie.description}</td>
                         <td>{movie.year}</td>
-                        <td>{movie.genre}</td>
+                        <td>{movie.genre == null ? movie.genre!.name : "no genre"}</td>
                         <td>{movie.rating}</td>
                         <td>
                             <Link className="btn btn-outline-primary" href={`/movies/${movie.movie_id}`}>Details</Link>
