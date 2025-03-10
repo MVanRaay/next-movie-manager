@@ -1,28 +1,33 @@
-import sqlite3 from "sqlite3";
-import {open} from "sqlite";
 import Link from "next/link";
 import Navtabs from "@/app/navtabs";
+import {Prisma, PrismaClient} from "@prisma/client";
 
-const db = await open({
-    filename: 'data/database.db',
-    driver: sqlite3.Database,
-});
+const prisma = new PrismaClient();
 
-export default async function MovieDetailPage({params}: {params: {id: number}}) {
+type MovieWithGenre = Prisma.movieGetPayload<{
+    include: {
+        genre: true
+    }
+}>
 
-    const movie = await db.get(`SELECT * FROM movies WHERE movie_id=${params.id}`);
-
+export default async function MovieDetailPage({params}: {params: {id: string}}) {
+    const movie: MovieWithGenre = await prisma.movie.findUniqueOrThrow({where: {movie_id: parseInt(params.id)}, include: {genre: true}});
 
     return (
         <section>
-            <Navtabs activePage="details" activeCategoryName="Movie" activeCategory="movies" id={params.id}></Navtabs>
-            <h1>{movie.title}</h1>
-            <h3>{movie.year}</h3>
-            <h6>{movie.genre}</h6>
-            <h6>⭐{movie.rating}</h6>
+            <Navtabs activePage="details" activeCategoryName="Movie" activeCategory="movies" id={movie.movie_id}></Navtabs>
+            <h1>Movie Details</h1>
+            <h4>Title</h4>
+            <p>{movie.title}</p>
+            <h4>Description</h4>
             <p>{movie.description}</p>
-
-
+            <h4>Year</h4>
+            <p>{movie.year}</p>
+            <h4>Rating</h4>
+            <p>{movie.rating}</p>
+            <h4>Genre</h4>
+            <p>{movie.genre != null ? movie.genre.name : 'No Genre'}</p>
+            <Link className="btn btn-primary" href="/movies">Go Back</Link>
         </section>
     )
 }

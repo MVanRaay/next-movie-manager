@@ -1,18 +1,39 @@
-import {open} from "sqlite";
-import sqlite3 from "sqlite3";
 import Navtabs from "@/app/navtabs";
+import {Prisma, PrismaClient} from '@prisma/client';
 
-const db = await open({
-    filename: 'data/database.db',
-    driver: sqlite3.Database,
-});
+const prisma = new PrismaClient();
 
-export default async function DeleteMoviePage({params}: {params: {id: number}}) {
-    const movie = await db.get(`SELECT * FROM movies WHERE movie_id = ${params.id}`);
+type Movie = Prisma.movieGetPayload<{
+    include: {
+        genre: true
+    }
+}>
+
+export default async function DeleteMoviePage({params}: {params: {id: string}}) {
+    const movie: Movie = await prisma.movie.findUniqueOrThrow({where: {movie_id: parseInt(params.id)}, include: {genre: true}});
+
+    async function deleteMovie() {
+        //TODO
+    }
 
     return (
         <section>
-            <Navtabs activePage="delete" activeCategoryName="Movie" activeCategory="movies" id={params.id}></Navtabs>
+            <Navtabs activePage="delete" activeCategoryName="Movie" activeCategory="movies" id={movie.movie_id} />
+            <h1>Movie Details</h1>
+            <h4>Title</h4>
+            <p>{movie.title}</p>
+            <h4>Description</h4>
+            <p>{movie.description}</p>
+            <h4>Year</h4>
+            <p>{movie.year}</p>
+            <h4>Rating</h4>
+            <p>{movie.rating}</p>
+            <h4>Genre</h4>
+            <p>{movie.genre != null ? movie.genre.name : 'No Genre'}</p>
+
+            <form action={deleteMovie}>
+
+            </form>
         </section>
     )
 }

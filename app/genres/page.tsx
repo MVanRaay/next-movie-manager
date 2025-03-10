@@ -1,26 +1,23 @@
 import Link from "next/link";
-import {useState, useEffect} from "react";
+import {Prisma, PrismaClient} from '@prisma/client';
+import Navtabs from "@/app/navtabs";
 
-type Genre = {
-    genre_id: number;
-    name: string;
-    amount: number;
-}
+const prisma = new PrismaClient();
+
+type GenreWithMovieCount = Prisma.genreGetPayload<{
+    include: {
+        _count: {
+            select: {movies: true},
+        },
+    },
+}>
 
 export default async function MoviesPage() {
-    const [genres, setGenres] = useState<Genre[]>([]);
-
-    useEffect(() => {
-        async function fetchGenres() {
-            const response = await fetch("/api/genres");
-            const data = await response.json();
-            setGenres(data);
-        }
-        fetchGenres();
-    }, []);
+    const genres: GenreWithMovieCount[] = await prisma.genre.findMany({include: {_count: {select: {movies: true}}}});
 
     return (
         <section>
+            <Navtabs activePage="all" activeCategoryName="Genre" activeCategory="genres" id={-1}/>
             <h1>All Genres</h1>
             <table className="table table-bordered">
                 <thead className="thead-light">
@@ -31,11 +28,15 @@ export default async function MoviesPage() {
                 </tr>
                 </thead>
                 <tbody>
-                {genres.map((genre: Genre) => (
+                {genres.map((genre: GenreWithMovieCount) => (
                     <tr key={genre.genre_id}>
                         <td>{genre.name}</td>
-                        <td>{genre.amount}</td>
+                        <td>{genre._count.movies}</td>
                         <td>
+                            <Link className="btn btn-outline-primary" href={`/genres/${genre.genre_id}`}>Details</Link>
+                            &nbsp;&nbsp;
+                            <Link className="btn btn-outline-info" href={`/genres/${genre.genre_id}/edit`}>Edit</Link>
+                            &nbsp;&nbsp;
                             <Link className="btn btn-outline-danger" href={`/genres/${genre.genre_id}/delete`}>Delete</Link>
                         </td>
                     </tr>

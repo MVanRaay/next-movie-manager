@@ -1,24 +1,8 @@
 import Link from "next/link";
-import sqlite3 from "sqlite3";
-import {open} from "sqlite";
 import Navtabs from "@/app/navtabs";
-import {movie, PrismaClient, Prisma} from "@prisma/client";
+import {PrismaClient, Prisma} from "@prisma/client";
 
 const prisma = new PrismaClient();
-
-// const db = await open({
-//     filename: 'data/database.db',
-//     driver: sqlite3.Database,
-// });
-
-// type Movie = void | {
-//     movie_id: number;
-//     title: string | null;
-//     description: string | null;
-//     year: number | null;
-//     rating: number | null;
-//     genre_id: number | null;
-// }[]
 
 type MovieWithGenre = Prisma.movieGetPayload<{
     include: {
@@ -27,7 +11,7 @@ type MovieWithGenre = Prisma.movieGetPayload<{
 }>
 
 export default async function MoviesPage() {
-    const moviesWithGenre = await prisma.movie.findMany({include: {genre: true,}});
+    const moviesWithGenre: MovieWithGenre[] = await prisma.movie.findMany({include: {genre: true,}});
 
     return (
         <section>
@@ -46,12 +30,12 @@ export default async function MoviesPage() {
                 </thead>
                 <tbody>
 
-                {moviesWithGenre.map((movie) => (
+                {moviesWithGenre.map((movie: MovieWithGenre) => (
                     <tr key={movie.movie_id}>
                         <td>{movie.title}</td>
                         <td>{movie.description}</td>
                         <td>{movie.year}</td>
-                        <td>{movie.genre == null ? movie.genre!.name : "no genre"}</td>
+                        <td>{movie.genre != null ? movie.genre!.name : "No Genre"}</td>
                         <td>{movie.rating}</td>
                         <td>
                             <Link className="btn btn-outline-primary" href={`/movies/${movie.movie_id}`}>Details</Link>
