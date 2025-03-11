@@ -8,7 +8,8 @@ const prisma = new PrismaClient();
 type Genre = Prisma.genreGetPayload<{}>
 
 export default async function DeleteGenrePage({params}: {params: {id: string}}) {
-    const genre: Genre = await prisma.genre.findUniqueOrThrow({where: {genre_id: parseInt(params.id)}});
+    const {id} = await params;
+    const genre: Genre = await prisma.genre.findUniqueOrThrow({where: {genre_id: parseInt(id)}});
 
     async function deleteGenre(formData: FormData) {
         'use server';
@@ -18,7 +19,7 @@ export default async function DeleteGenrePage({params}: {params: {id: string}}) 
 
     return (
         <section>
-            <Navtabs activePage="delete" activeCategoryName="Genre" activeCategory="genres" id={genre.genre_id}/>
+            <Navtabs activePage="delete" activeCategory="Genre" id={genre.genre_id}/>
             <h1>Delete Genre</h1>
             <h4>Name</h4>
             <p>{genre.name}</p>

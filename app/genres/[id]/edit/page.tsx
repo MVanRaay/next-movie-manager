@@ -1,7 +1,6 @@
 import {Prisma, PrismaClient} from "@prisma/client";
 import Navtabs from "@/components/navtabs";
 import {redirect} from "next/navigation";
-import {red} from "next/dist/lib/picocolors";
 import Link from "next/link";
 
 const prisma = new PrismaClient();
@@ -9,7 +8,8 @@ const prisma = new PrismaClient();
 type Genre = Prisma.genreGetPayload<{}>
 
 export default async function EditGenrePage({params}: {params: {id: string}}) {
-    const genre: Genre = await prisma.genre.findUniqueOrThrow({where: {genre_id: parseInt(params.id)}});
+    const {id} = await params;
+    const genre: Genre = await prisma.genre.findUniqueOrThrow({where: {genre_id: parseInt(id)}});
 
     async function updateGenre(formData: FormData) {
         'use server';
@@ -26,7 +26,7 @@ export default async function EditGenrePage({params}: {params: {id: string}}) {
 
     return (
         <section>
-            <Navtabs activePage="edit" activeCategoryName="Genre" activeCategory="genres" id={genre.genre_id}/>
+            <Navtabs activePage="edit" activeCategory="Genre" id={genre.genre_id}/>
             <h1>Add a New Genre</h1>
             <form className='col-7' action={updateGenre}>
                 <div className="form-group">

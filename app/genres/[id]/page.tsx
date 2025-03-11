@@ -7,11 +7,12 @@ const prisma = new PrismaClient();
 type Genre = Prisma.genreGetPayload<{}>
 
 export default async function GenreDetailsPage({params}: {params: {id: string}}) {
-    const genre: Genre = await prisma.genre.findUniqueOrThrow({where: {genre_id: parseInt(params.id)}});
+    const {id} = await params;
+    const genre: Genre = await prisma.genre.findUniqueOrThrow({where: {genre_id: parseInt(id)}});
 
     return (
         <section>
-            <Navtabs activePage="details" activeCategoryName="Genre" activeCategory="genres" id={genre.genre_id}/>
+            <Navtabs activePage="details" activeCategory="Genre" id={genre.genre_id}/>
             <h1>Genre Details</h1>
             <h4>Name</h4>
             <p>{genre.name}</p>

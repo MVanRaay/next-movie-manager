@@ -11,7 +11,8 @@ type MovieWithGenre = Prisma.movieGetPayload<{
 }>
 
 export default async function MovieDetailPage({params}: {params: {id: string}}) {
-    const movie: MovieWithGenre = await prisma.movie.findUniqueOrThrow({where: {movie_id: parseInt(params.id)}, include: {genre: true}});
+    const {id} = await params;
+    const movie: MovieWithGenre = await prisma.movie.findUniqueOrThrow({where: {movie_id: parseInt(id)}, include: {genre: true}});
 
     return (
         <section>

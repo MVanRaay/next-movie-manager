@@ -2,8 +2,15 @@ import Navtabs from "@/components/navtabs";
 import Link from "next/link";
 import {Prisma, PrismaClient} from "@prisma/client";
 import {redirect} from "next/navigation";
+import MovieForm from "../movieForm";
 
 const prisma = new PrismaClient();
+
+type Movie = Prisma.movieGetPayload<{
+    include: {
+        genre: true
+    }
+}>
 
 type Genre = Prisma.genreGetPayload<{
     include: {
@@ -13,6 +20,7 @@ type Genre = Prisma.genreGetPayload<{
 
 export default async function AddMoviePage() {
     const genres: Genre[] = await prisma.genre.findMany({include: {movies: false}});
+    const defaultMovie: Movie = {movie_id: -1, title: "", description: "", year: null, rating: null, genre_id: null, genre: null}
 
     async function addMovie(formData: FormData) {
         'use server';
@@ -35,44 +43,7 @@ export default async function AddMoviePage() {
             <Navtabs activePage="add" activeCategory="Movie" id={-1}/>
             <h1>Add a New Movie</h1>
             <form className="col-7" action={addMovie}>
-                <div className="form-group">
-                    <label htmlFor="title">Title</label>
-                    <input className="form-control" type="text" name="title"/>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="description">Description</label>
-                    <input className="form-control" type="text" name="description"/>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="year">Year</label>
-                    <input className="form-control" type="text" name="year"/>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="rating">Rating</label>
-                    <select className="form-control" name="rating">
-                        <option key={1} value="1">1</option>
-                        <option key={2} value="2">2</option>
-                        <option key={3} value="3">3</option>
-                        <option key={4} value="4">4</option>
-                        <option key={5} value="5">5</option>
-                        <option key={6} value="6">6</option>
-                        <option key={7} value="7">7</option>
-                        <option key={8} value="8">8</option>
-                        <option key={9} value="9">9</option>
-                        <option key={10} value="10">10</option>
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="genre">Genre</label>
-                    <select className="form-control" name="genre">
-                        <option key={-1} value="">-- Please Select --</option>
-                        {genres.map((genre: Genre) => (
-                            <option key={genre.genre_id} value={genre.genre_id}>
-                                {genre.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <MovieForm movie={defaultMovie} genres={genres} />
                 <input className="btn btn-primary" type="submit" value="Add Movie"/>
                 <Link className="btn btn-outline-danger" href="/movies">
                     Cancel
