@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Navtabs from "@/app/navtabs";
+import Navtabs from "@/components/navtabs";
 import {PrismaClient, Prisma} from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -11,11 +11,11 @@ type MovieWithGenre = Prisma.movieGetPayload<{
 }>
 
 export default async function MoviesPage() {
-    const moviesWithGenre: MovieWithGenre[] = await prisma.movie.findMany({include: {genre: true,}});
+    const moviesWithGenre: MovieWithGenre[] = await prisma.movie.findMany({include: {genre: true}});
 
     return (
         <section>
-            <Navtabs activePage="all" activeCategoryName="Movie" activeCategory="movies" id={-1}></Navtabs>
+            <Navtabs activePage="all" activeCategory="Movie" id={-1}></Navtabs>
             <h1>All Movies</h1>
             <table className="table table-bordered">
                 <thead className="thead-light">

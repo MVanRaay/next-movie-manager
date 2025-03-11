@@ -1,4 +1,4 @@
-import Navtabs from "@/app/navtabs";
+import Navtabs from "@/components/navtabs";
 import Link from "next/link";
 import {Prisma, PrismaClient} from "@prisma/client";
 import {redirect} from "next/navigation";
@@ -32,7 +32,7 @@ export default async function AddMoviePage() {
 
     return (
         <section>
-            <Navtabs activePage="add" activeCategoryName="Movie" activeCategory="movies" id={-1}/>
+            <Navtabs activePage="add" activeCategory="Movie" id={-1}/>
             <h1>Add a New Movie</h1>
             <form className="col-7" action={addMovie}>
                 <div className="form-group">

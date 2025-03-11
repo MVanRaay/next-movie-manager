@@ -1,5 +1,7 @@
-import Navtabs from "@/app/navtabs";
+import Navtabs from "@/components/navtabs";
 import {Prisma, PrismaClient} from '@prisma/client';
+import {redirect} from "next/navigation";
+import Link from "next/link";
 
 const prisma = new PrismaClient();
 
@@ -13,13 +15,17 @@ export default async function DeleteMoviePage({params}: {params: {id: string}}) 
     const movie: Movie = await prisma.movie.findUniqueOrThrow({where: {movie_id: parseInt(params.id)}, include: {genre: true}});
 
     async function deleteMovie() {
-        //TODO
+        'use server';
+
+        await prisma.movie.delete({where: {movie_id: movie.movie_id}});
+
+        redirect("/movies");
     }
 
     return (
         <section>
-            <Navtabs activePage="delete" activeCategoryName="Movie" activeCategory="movies" id={movie.movie_id} />
-            <h1>Movie Details</h1>
+            <Navtabs activePage="delete" activeCategory="Movie" id={movie.movie_id} />
+            <h1>Delete Movie</h1>
             <h4>Title</h4>
             <p>{movie.title}</p>
             <h4>Description</h4>
@@ -32,7 +38,9 @@ export default async function DeleteMoviePage({params}: {params: {id: string}}) 
             <p>{movie.genre != null ? movie.genre.name : 'No Genre'}</p>
 
             <form action={deleteMovie}>
-
+                <input className="btn btn-danger" type="submit" value="Delete" />
+                &nbsp;&nbsp;
+                <Link className="btn btn-outline-primary" href="/movies">Cancel</Link>
             </form>
         </section>
     )

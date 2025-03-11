@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {redirect} from "next/navigation";
-import Navtabs from "@/app/navtabs";
+import Navtabs from "@/components/navtabs";
 import {Prisma, PrismaClient} from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -38,8 +38,8 @@ export default async function EditMoviePage({params}: {params: {id: string}}) {
 
     return (
         <section>
-            <Navtabs activePage="edit" activeCategoryName="Movie" activeCategory="movies" id={movie.movie_id}></Navtabs>
-            <h1>Edit Movie Details</h1>
+            <Navtabs activePage="edit" activeCategory="Movie" id={movie.movie_id}></Navtabs>
+            <h1>Edit Movie</h1>
             <form action={updateMovie}>
                 <div className="form-group col-7">
                     <label htmlFor="title">Title</label>

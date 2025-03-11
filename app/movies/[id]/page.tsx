@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Navtabs from "@/app/navtabs";
+import Navtabs from "@/components/navtabs";
 import {Prisma, PrismaClient} from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -15,7 +15,7 @@ export default async function MovieDetailPage({params}: {params: {id: string}}) 
 
     return (
         <section>
-            <Navtabs activePage="details" activeCategoryName="Movie" activeCategory="movies" id={movie.movie_id}></Navtabs>
+            <Navtabs activePage="details" activeCategory="Movie" id={movie.movie_id}></Navtabs>
             <h1>Movie Details</h1>
             <h4>Title</h4>
             <p>{movie.title}</p>

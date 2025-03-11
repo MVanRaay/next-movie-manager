@@ -1,13 +1,14 @@
 import Link from "next/link";
 
-export default function Navtabs({activePage, activeCategory, activeCategoryName, id} : {activePage: string, activeCategory: string, activeCategoryName: string, id: number}) {
+export default function Navtabs({activePage, activeCategory, id} : {activePage: string, activeCategory: string, id: number}) {
+    // activeCategory: Movie
     return (
         <ul className="nav nav-tabs">
             <li className="nav-item" key="all">
-                <Link className={`nav-link ${activePage == 'all' ? 'active' : ''}`} href={`/${activeCategory}`}>All {activeCategoryName}s</Link>
+                <Link className={`nav-link ${activePage == 'all' ? 'active' : ''}`} href={`/${activeCategory}s`}>All {activeCategory}s</Link>
             </li>
             <li className="nav-item" key="add">
-                <Link className={`nav-link ${activePage == 'add' ? 'active' : ''}`} href={`/${activeCategory}/add`}>Add a New {activeCategoryName}</Link>
+                <Link className={`nav-link ${activePage == 'add' ? 'active' : ''}`} href={`/${activeCategory}s/add`}>Add a New {activeCategory}</Link>
             </li>
             <li className="nav-item" key="details">
                 <Link className={`nav-link ${activePage == 'details' ? 'active' : ''} ${id == -1 ? 'disabled' : ''}`} href={`/${activeCategory}/${id}`}>Details</Link>

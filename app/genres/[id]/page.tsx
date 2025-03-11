@@ -1,4 +1,4 @@
-import Navtabs from "@/app/navtabs";
+import Navtabs from "@/components/navtabs";
 import {Prisma, PrismaClient} from "@prisma/client";
 import Link from "next/link";
 

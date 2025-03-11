@@ -1,9 +1,9 @@
-import Navbar from '../navbar';
+import Navbar from '../../components/navbar';
 
-export default async function MovieLayout({children}: {children: React.ReactNode}) {
+export default async function MovieLayout({children}: { children: React.ReactNode }) {
     return (
         <section>
-            <Navbar activeCategory="movies" />
+            <Navbar activeCategory="movies"/>
             {children}
         </section>
     )

@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient} from "@prisma/client";
-import Navtabs from "@/app/navtabs";
+import Navtabs from "@/components/navtabs";
 import {redirect} from "next/navigation";
 import Link from "next/link";
 
@@ -20,7 +20,7 @@ export default async function AddGenrePage() {
 
     return (
         <section>
-            <Navtabs activePage="add" activeCategoryName="Genre" activeCategory="genres" id={-1}/>
+            <Navtabs activePage="add" activeCategory="Genre" id={-1}/>
             <h1>Add a New Genre</h1>
             <form className='col-7' action={addGenre}>
                 <div className="form-group">

@@ -1,5 +1,5 @@
 import {ReactNode} from "react";
-import Navbar from "@/app/navbar";
+import Navbar from "../../components/navbar";
 
 export default async function GenresLayout({children}: {children: ReactNode}) {
 

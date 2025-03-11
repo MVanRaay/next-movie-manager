@@ -1,6 +1,6 @@
 import {redirect} from "next/navigation";
 import {Prisma, PrismaClient} from '@prisma/client';
-import Navtabs from "@/app/navtabs";
+import Navtabs from "@/components/navtabs";
 import Link from "next/link";
 
 const prisma = new PrismaClient();

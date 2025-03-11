@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient} from "@prisma/client";
-import Navtabs from "@/app/navtabs";
+import Navtabs from "@/components/navtabs";
 import {redirect} from "next/navigation";
 import {red} from "next/dist/lib/picocolors";
 import Link from "next/link";

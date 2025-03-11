@@ -2,3 +2,6 @@ body{
     width: 80%;
     justify-self: center;
 }
+#footer{
+    width: max-content;
+}
